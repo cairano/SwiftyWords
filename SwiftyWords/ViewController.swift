@@ -59,7 +59,7 @@ class ViewController: UIViewController {
         guard let answerText = gameView.currentAnswer.text else { return }
         
         if let solutionPosition = solutions.firstIndex(of: answerText) {
-            activatedButtons.removeAll() //segunda vez que crio isto, criar um func só pra isto?
+            activatedButtons.removeAll()
             
             var splitAnswers = gameView.answersLabel.text?.components(separatedBy: "\n")
             splitAnswers?[solutionPosition] = answerText

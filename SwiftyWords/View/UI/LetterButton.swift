@@ -12,9 +12,9 @@ class LetterButton: UIButton {
         
         self.translatesAutoresizingMaskIntoConstraints = true
         
-//        self.titleLabel?.font = UIFont.systemFont(ofSize: 36)
-//        self.layer.borderWidth = 1
-//        self.layer.borderColor = UIColor.gray.cgColor
+        self.setTitle("WWW", for: .normal)
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor.gray.cgColor
     }
     
     required init?(coder: NSCoder) {

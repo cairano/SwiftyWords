@@ -113,6 +113,7 @@
 			children = (
 				265615C52485781B00293FD3 /* AppDelegate.swift */,
 				265615C72485781B00293FD3 /* SceneDelegate.swift */,
+				265615C92485781B00293FD3 /* ViewController.swift */,
 				265615FA24887A0700293FD3 /* View */,
 				265615CE2485782000293FD3 /* Assets.xcassets */,
 				265615D02485782000293FD3 /* LaunchScreen.storyboard */,
@@ -144,7 +145,6 @@
 			isa = PBXGroup;
 			children = (
 				26561608248A7DB700293FD3 /* UI */,
-				265615C92485781B00293FD3 /* ViewController.swift */,
 				265615FC24887C7400293FD3 /* GameView.swift */,
 				265616062489C10A00293FD3 /* ButtonsView.swift */,
 			);
