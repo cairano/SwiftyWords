@@ -2,9 +2,6 @@
 //  TextField.swift
 //  SwiftyWords
 //
-//  Created by Carlos Irano on 04/06/20.
-//  Copyright © 2020 Carlos Irano. All rights reserved.
-//
 
 import UIKit
 

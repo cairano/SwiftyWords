@@ -5,7 +5,13 @@
 
 import UIKit
 
+protocol ButtonViewDelegate: AnyObject {
+    func didLetterPressed(_ sender: UIButton)
+}
+
 class ButtonsView: UIView {
+    weak var delegate: ButtonViewDelegate?
+    
     var buttons = [LetterButton]()
     
     override init(frame: CGRect) {
@@ -13,8 +19,7 @@ class ButtonsView: UIView {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        //backgroundColor = .green
-        
+        setup()
         makeLetterButtons()
     }
     
@@ -30,6 +35,7 @@ class ButtonsView: UIView {
             for col in 0 ..< 5 {
                 let letterButton = LetterButton(type: .system)
                 letterButton.titleLabel?.font = UIFont.systemFont(ofSize: 36)
+                letterButton.addTarget(self, action: #selector(letterTapped), for: .touchUpInside)
                 
                 let frame = CGRect(x: col * width, y: row * height, width: width, height: height)
                 letterButton.frame = frame
@@ -41,4 +47,28 @@ class ButtonsView: UIView {
         }
     }
     // TODO: colocar uma distancia entre os botões
+    
+    @objc private func letterTapped(_ sender: UIButton) {
+        delegate?.didLetterPressed(sender)
+    }
+}
+
+extension ButtonsView: ViewCoding {
+    func setup() {
+        hierarchyView()
+        constraintView()
+        aditionalConfigView()
+    }
+    
+    func hierarchyView() {
+        //
+    }
+    
+    func constraintView() {
+        //
+    }
+    
+    func aditionalConfigView() {
+        backgroundColor = .cyan
+    }
 }

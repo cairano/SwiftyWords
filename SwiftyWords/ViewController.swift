@@ -28,74 +28,18 @@ class ViewController: UIViewController {
     }
     
     override func loadView() {
+        gameView.delegate = self
+        gameView.buttonsView.delegate = self
+        
         view = gameView
-        
-        gameView.submit.addTarget(self, action: #selector(submitTapped(_:)), for: .touchUpInside)
-        
-        gameView.clear.addTarget(self, action: #selector(clearTapped(_:)), for: .touchUpInside)
-        
-        letterButtons = gameView.buttonsView.buttons
-        
-        for button in letterButtons {
-            button.addTarget(self, action: #selector(letterTapped(_:)), for: .touchUpInside)
-        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        letterButtons = gameView.buttonsView.buttons // faz sentido isto aqui?
+        
         loadLevel()
-    }
-    
-    @objc func letterTapped(_ sender: UIButton) {
-        guard let buttonTitle = sender.titleLabel?.text else { return }
-        
-        gameView.currentAnswer.text = gameView.currentAnswer.text?.appending(buttonTitle) //buttonText? buttonLetterText
-        activatedButtons.append(sender)
-        sender.isHidden = true
-    }
-    
-    @objc func submitTapped(_ sender: UIButton) {
-        guard let answerText = gameView.currentAnswer.text else { return }
-        
-        if let solutionPosition = solutions.firstIndex(of: answerText) {
-            activatedButtons.removeAll()
-            
-            var splitAnswers = gameView.answersLabel.text?.components(separatedBy: "\n")
-            splitAnswers?[solutionPosition] = answerText
-            gameView.answersLabel.text = splitAnswers?.joined(separator: "\n")
-            
-            gameView.currentAnswer.text = ""
-            score += 1
-            totalCorrectAnswer += 1
-            
-//            if score % 7 == 0 {
-            if totalCorrectAnswer == totalNumberOfLines {
-                let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
-                present(ac, animated: true, completion: nil)
-            }
-        } else {
-            if score > 0 {
-                score -= 1
-            }
-            
-            let ac = UIAlertController(title: "Ops!", message: "I have no idea what are your trying to say...", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Try again!", style: .default, handler: nil))
-            present(ac, animated: true, completion: nil)
-        }
-        // TODO: trocar iflet por guardlet
-        // TODO: shuffle the messages no wrong alert - Is this exist in this world? I guess not! / Tsc tsc tsc... Do better!
-    }
-    
-    @objc func clearTapped(_ sender: UIButton ) {
-        gameView.currentAnswer.text = ""
-        
-        for button in activatedButtons {
-            button.isHidden = false
-        }
-        
-        activatedButtons.removeAll()
     }
     
     func loadLevel() {
@@ -150,5 +94,58 @@ class ViewController: UIViewController {
         for button in letterButtons {
             button.isHidden = false
         }
+    }
+}
+
+extension ViewController: GameViewDelegate, ButtonViewDelegate {
+    func didSubmitPressed(_ sender: UIButton) {
+        guard let answerText = gameView.currentAnswer.text else { return }
+        
+        if let solutionPosition = solutions.firstIndex(of: answerText) {
+            activatedButtons.removeAll()
+            
+            var splitAnswers = gameView.answersLabel.text?.components(separatedBy: "\n")
+            splitAnswers?[solutionPosition] = answerText
+            gameView.answersLabel.text = splitAnswers?.joined(separator: "\n")
+            
+            gameView.currentAnswer.text = ""
+            score += 1
+            totalCorrectAnswer += 1
+            
+//            if score % 7 == 0 {
+            if totalCorrectAnswer == totalNumberOfLines {
+                let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
+                present(ac, animated: true, completion: nil)
+            }
+        } else {
+            if score > 0 {
+                score -= 1
+            }
+            
+            let ac = UIAlertController(title: "Ops!", message: "I have no idea what are your trying to say...", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Try again!", style: .default, handler: nil))
+            present(ac, animated: true, completion: nil)
+        }
+        // TODO: trocar iflet por guardlet
+        // TODO: shuffle the messages no wrong alert - Is this exist in this world? I guess not! / Tsc tsc tsc... Do better!
+    }
+    
+    func didClearPressed(_ sender: UIButton) {
+        gameView.currentAnswer.text = ""
+        
+        for button in activatedButtons {
+            button.isHidden = false
+        }
+        
+        activatedButtons.removeAll()
+    }
+    
+    func didLetterPressed(_ sender: UIButton) {
+        guard let buttonTitle = sender.titleLabel?.text else { return }
+        
+        gameView.currentAnswer.text = gameView.currentAnswer.text?.appending(buttonTitle) //buttonText? buttonLetterText
+        activatedButtons.append(sender)
+        sender.isHidden = true
     }
 }
