@@ -53,9 +53,6 @@ class ViewController: UIViewController {
         var solutionString = ""
         var letterKeys = [String]()
         
-//        if let levelFileURL = Bundle.main.url(forResource: "level\(level)", withExtension: "txt") {
-        
-//        if let levelContents = try? String(contentsOf: levelFileURL) {
         var lines = levelContents.components(separatedBy: "\n")
         lines.shuffle()
         
@@ -76,9 +73,6 @@ class ViewController: UIViewController {
             let keys = answer.components(separatedBy: "|")
             letterKeys += keys
         }
-//        }
-//        }
-        // TODO: trocar estes iflet por guardlet (OK)
         
         gameView.cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
         gameView.answersLabel.text = solutionString.trimmingCharacters(in: .whitespacesAndNewlines)
