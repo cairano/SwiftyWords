@@ -7,8 +7,9 @@ import UIKit
 
 class ViewController: UIViewController {
     let gameView = GameView()
+    var buttonsView = ButtonsView()
     
-    var letterButtons = [UIButton]()
+    var letterButtons = [LetterButton]()
     
     var totalCorrectAnswer = 0
     var totalNumberOfLines = 0 {
@@ -28,50 +29,56 @@ class ViewController: UIViewController {
     }
     
     override func loadView() {
-        gameView.delegate = self
-        gameView.buttonsView.delegate = self
-        
         view = gameView
+        gameView.delegate = self
+        
+        buttonsView = gameView.buttonsView
+        buttonsView.delegate = self
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        letterButtons = gameView.buttonsView.buttons // faz sentido isto aqui?
+        letterButtons = buttonsView.buttons
         
         loadLevel()
     }
     
     func loadLevel() {
+        guard let levelFileURL = Bundle.main.url(forResource: "level\(level)", withExtension: "txt") else { return }
+        
+        guard let levelContents = try? String(contentsOf: levelFileURL) else { return }
+        
         var clueString = ""
         var solutionString = ""
         var letterKeys = [String]()
         
-        if let levelFileURL = Bundle.main.url(forResource: "level\(level)", withExtension: "txt") {
-            if let levelContents = try? String(contentsOf: levelFileURL) {
-                var lines = levelContents.components(separatedBy: "\n")
-                lines.shuffle()
-                
-                totalNumberOfLines = lines.count
-                
-                for (index, line) in lines.enumerated() {
-                    let parts = line.components(separatedBy: ": ")
-                    let answer = parts[0]
-                    let clue = parts[1]
-                    
-                    clueString += "\(index + 1). \(clue)\n"
-                    
-                    let solutionWord = answer.replacingOccurrences(of: "|", with: "")
-                    solutions.append(solutionWord)
-                    
-                    solutionString += "\(solutionWord.count) letters \n"
-                    
-                    let keys = answer.components(separatedBy: "|")
-                    letterKeys += keys
-                }
-            }
+//        if let levelFileURL = Bundle.main.url(forResource: "level\(level)", withExtension: "txt") {
+        
+//        if let levelContents = try? String(contentsOf: levelFileURL) {
+        var lines = levelContents.components(separatedBy: "\n")
+        lines.shuffle()
+        
+        totalNumberOfLines = lines.count
+        
+        for (index, line) in lines.enumerated() {
+            let parts = line.components(separatedBy: ": ")
+            let answer = parts[0]
+            let clue = parts[1]
+            
+            clueString += "\(index + 1). \(clue)\n"
+            
+            let solutionWord = answer.replacingOccurrences(of: "|", with: "")
+            solutions.append(solutionWord)
+            
+            solutionString += "\(solutionWord.count) letters \n"
+            
+            let keys = answer.components(separatedBy: "|")
+            letterKeys += keys
         }
-        // TODO: trocar estes iflet por guardlet
+//        }
+//        }
+        // TODO: trocar estes iflet por guardlet (OK)
         
         gameView.cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
         gameView.answersLabel.text = solutionString.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -112,7 +119,6 @@ extension ViewController: GameViewDelegate, ButtonViewDelegate {
             score += 1
             totalCorrectAnswer += 1
             
-//            if score % 7 == 0 {
             if totalCorrectAnswer == totalNumberOfLines {
                 let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
@@ -127,8 +133,6 @@ extension ViewController: GameViewDelegate, ButtonViewDelegate {
             ac.addAction(UIAlertAction(title: "Try again!", style: .default, handler: nil))
             present(ac, animated: true, completion: nil)
         }
-        // TODO: trocar iflet por guardlet
-        // TODO: shuffle the messages no wrong alert - Is this exist in this world? I guess not! / Tsc tsc tsc... Do better!
     }
     
     func didClearPressed(_ sender: UIButton) {

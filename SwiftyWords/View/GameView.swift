@@ -47,8 +47,6 @@ class GameView: UIView {
     //
     
     private func makeView() { // tirar isto
-        self.backgroundColor = .white
-        
         makeScoreLabel()
         makeClueLabel()
         makeAnswerLabel()
@@ -178,6 +176,8 @@ extension GameView: ViewCoding {
     }
     
     func aditionalConfigView() {
+        self.backgroundColor = .white
+        
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
         clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
     }

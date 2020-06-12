@@ -12,7 +12,7 @@ protocol ButtonViewDelegate: AnyObject {
 class ButtonsView: UIView {
     weak var delegate: ButtonViewDelegate?
     
-    var buttons = [LetterButton]()
+    private(set) var buttons = [LetterButton]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,6 +69,6 @@ extension ButtonsView: ViewCoding {
     }
     
     func aditionalConfigView() {
-        backgroundColor = .cyan
+        backgroundColor = .white
     }
 }
